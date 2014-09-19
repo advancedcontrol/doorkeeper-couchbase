@@ -38,13 +38,13 @@ module Doorkeeper
 
 
     def self.by_token(token)
-      find(token)
+      find_by_id(token)
     end
 
     def self.by_refresh_token(refresh_token)
       id = AccessToken.bucket.get("refresh-#{refresh_token}", {quiet: true})
       if id
-        AccessToken.find_by_id(id)
+        find_by_id(id)
       end
     end
 
@@ -169,7 +169,7 @@ module Doorkeeper
     after_create :set_refresh_token, if: :use_refresh_token?
     def set_refresh_token
       # TODO:: add config for refresh token time
-      expire = 3.months.to_i
+      expire = (Time.now + 3.months).to_i  # Over 30 days couchbase requires a different format
       ::Doorkeeper::AccessToken.bucket.touch self.id, :ttl => expire
       ::Doorkeeper::AccessToken.bucket.set("refresh-#{self.refresh_token}", self.id, :ttl => expire)
     end
