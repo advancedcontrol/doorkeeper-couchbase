@@ -33,7 +33,11 @@ module Doorkeeper
       # Couchbase is missing update_attribute
       def update_attribute(att, value)
         self.send(:"#{att}=", value)
-        self.save(validate: false)
+        if att == :revoked_at
+          self.save(validate: false, ttl: self.expires_in)
+        else
+          self.save(validate: false)
+        end
       end
     end
   end
