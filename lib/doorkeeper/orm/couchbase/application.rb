@@ -59,10 +59,10 @@ module Doorkeeper
 
     private
 
-    before_validation :generate_uid, :generate_secret, on: :create
-
     before_create :set_id
     def set_id
+      generate_uid
+      generate_secret
       self.id = self.uid
     end
 
