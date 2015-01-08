@@ -5,8 +5,8 @@ module Doorkeeper
     attribute :name,
               :uid,
               :secret,
-              :redirect_uri,
-              :scopes
+              :redirect_uri
+    attribute :scopes, default: ''
 
     attribute :created_at, :default => lambda { Time.now.to_i }
 
