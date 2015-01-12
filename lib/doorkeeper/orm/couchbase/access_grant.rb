@@ -28,8 +28,6 @@ module Doorkeeper
     end
 
     validates :resource_owner_id, :application_id, :token, :expires_in, :redirect_uri, presence: true
-    before_validation :generate_token, on: :create
-    
 
 
   	def self.by_token(token)
@@ -43,17 +41,16 @@ module Doorkeeper
 
     private
 
+    before_create :generate_tokens
+    def generate_tokens
+      self.token = UniqueToken.generate
+      self.id = self.token
+    end
+
     # Auto remove the entry once expired
     after_create :set_ttl
     def set_ttl
       ::Doorkeeper::AccessGrant.bucket.touch self.id, :ttl => self.expires_in
-    end
-
-
-
-    def generate_token
-      self.token = UniqueToken.generate
-      self.id = self.token
     end
   end
 end
