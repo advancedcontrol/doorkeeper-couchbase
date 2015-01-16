@@ -1,3 +1,3 @@
 
 require 'doorkeeper/orm/couchbase'
-require 'orchestrator/engine'
+require 'doorkeeper-couchbase/engine'
