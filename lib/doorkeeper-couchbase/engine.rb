@@ -2,7 +2,7 @@ module DoorkeeperCouchbase
     class Engine < ::Rails::Engine
 
         config.after_initialize do |app|
-            path = File.expand_path('../doorkeeper/orm/couchbase', __FILE__)
+            path = File.expand_path('../../doorkeeper/orm/couchbase', __FILE__)
 
             # Ensure the models are loaded
             ::Doorkeeper::Orm::Couchbase.initialize_models!
