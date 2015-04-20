@@ -22,7 +22,7 @@ module Doorkeeper
     alias_method :uid, :id
 
 
-    validates :name, :secret, :uid, presence: true
+    validates :name, :secret, presence: true
     validates :redirect_uri, redirect_uri: true
 
     if ::Rails.version.to_i < 4 || defined?(::ProtectedAttributes)
