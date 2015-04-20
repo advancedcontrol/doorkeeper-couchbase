@@ -12,6 +12,8 @@ Gem::Specification.new do |s|
     s.summary     = 'A Couchbase ORM for Doorkeeper'
     s.description = 'A Couchbase ORM for Doorkeeper. Because both projects rock.'
 
+    s.add_dependency 'addressable'        # IP address utilities
+    
     s.files = Dir["{lib}/**/*"] + %w(doorkeeper-couchbase.gemspec Gemfile README.md LICENSE)
 
     s.require_paths = ['lib']

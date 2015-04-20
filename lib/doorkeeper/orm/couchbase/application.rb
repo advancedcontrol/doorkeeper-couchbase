@@ -1,3 +1,7 @@
+require 'addressable/uri'
+require 'digest'
+
+
 module Doorkeeper
   class Application < ::Couchbase::Model
     design_document :dk_app
@@ -15,6 +19,8 @@ module Doorkeeper
 
 
     include OAuth::Helpers
+    alias_method :uid, :id
+
 
     validates :name, :secret, :uid, presence: true
     validates :redirect_uri, redirect_uri: true
@@ -47,7 +53,6 @@ module Doorkeeper
 
     
 
-    
     ## TODO:: Where are these used
     def self.by_user(id)
       by_user_id({:key => [id], :stale => false})
@@ -57,13 +62,15 @@ module Doorkeeper
       show_all({:key => nil, :include_docs => true, :stale => false})
     end
 
+
     private
+
 
     before_create :set_id
     def set_id
-      generate_uid
-      generate_secret
-      self.id = self.uid
+      origin = Addressable::URI.parse(self.redirect_uri).origin
+      self.uid ||= Digest::MD5.hexdigest(origin.downcase)
+      self.secret ||= UniqueToken.generate
     end
 
     # This is equivalent to has_many dependent: :destroy
@@ -75,15 +82,6 @@ module Doorkeeper
       AccessGrant.where_application_id(self.id).each do |at|
         at.delete!
       end
-    end
-
-
-    def generate_uid
-      self.uid ||= UniqueToken.generate
-    end
-
-    def generate_secret
-      self.secret ||= UniqueToken.generate
     end
   end
 end
