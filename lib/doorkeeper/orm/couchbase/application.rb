@@ -76,14 +76,14 @@ module Doorkeeper
     end
 
     # This is equivalent to has_many dependent: :destroy
-      before_delete :clean_up
-      def clean_up
-        AccessToken.where_application_id(self.id).each do |at|
-          at.delete!
-        end
-        AccessGrant.where_application_id(self.id).each do |at|
-          at.delete!
-        end
+    before_delete :clean_up
+    def clean_up
+      AccessToken.where_application_id(self.id).each do |at|
+        at.delete!
       end
+      AccessGrant.where_application_id(self.id).each do |at|
+        at.delete!
+      end
+    end
   end
 end
