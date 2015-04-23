@@ -62,6 +62,9 @@ module Doorkeeper
       show_all({:key => nil, :include_docs => true, :stale => false})
     end
 
+    def uid
+      self.id
+    end
 
     private
 
@@ -69,19 +72,19 @@ module Doorkeeper
     before_create :set_id
     def set_id
       origin = Addressable::URI.parse(self.redirect_uri).origin
-      self.uid ||= Digest::MD5.hexdigest(origin.downcase)
+      self.id ||= Digest::MD5.hexdigest(self.redirect_uri)
       self.secret ||= UniqueToken.generate
     end
 
     # This is equivalent to has_many dependent: :destroy
-    before_delete :clean_up
-    def clean_up
-      AccessToken.where_application_id(self.id).each do |at|
-        at.delete!
-      end
-      AccessGrant.where_application_id(self.id).each do |at|
-        at.delete!
-      end
-    end
+    # before_delete :clean_up
+    # def clean_up
+    #   AccessToken.where_application_id(self.id).each do |at|
+    #     at.delete!
+    #   end
+    #   AccessGrant.where_application_id(self.id).each do |at|
+    #     at.delete!
+    #   end
+    # end
   end
 end
