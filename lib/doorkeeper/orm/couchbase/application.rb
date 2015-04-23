@@ -62,14 +62,16 @@ module Doorkeeper
       show_all({:key => nil, :include_docs => true, :stale => false})
     end
 
+    def uid
+      self.id
+    end
 
     private
 
 
     before_create :set_id
     def set_id
-      origin = Addressable::URI.parse(self.redirect_uri).origin
-      self.uid ||= Digest::MD5.hexdigest(origin.downcase)
+      self.id ||= Digest::MD5.hexdigest(self.redirect_uri)
       self.secret ||= UniqueToken.generate
     end
 
