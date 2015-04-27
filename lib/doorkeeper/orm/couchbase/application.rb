@@ -71,7 +71,7 @@ module Doorkeeper
 
     before_create :set_id
     def set_id
-      self.id ||= Digest::MD5.hexdigest("#{self.name}#{self.redirect_uri}")
+      self.id ||= Digest::MD5.hexdigest(self.redirect_uri)
       self.secret ||= UniqueToken.generate
     end
 
