@@ -10,6 +10,7 @@ module Doorkeeper
               :uid,
               :secret,
               :redirect_uri
+    attribute :skip_authorization, default: false
     attribute :scopes, default: ''
 
     attribute :created_at, :default => lambda { Time.now.to_i }
