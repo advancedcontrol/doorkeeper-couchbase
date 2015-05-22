@@ -98,7 +98,7 @@ module Doorkeeper
                             resource_owner_or_id
                           end
       token = last_authorized_token_for(application.try(:id), resource_owner_id)
-      token if token && Doorkeeper::OAuth::Helpers::ScopeChecker.matches?(token.scopes, scopes)
+      token if token && Doorkeeper::OAuth::Helpers::ScopeChecker.match?(token.scopes, scopes)
     end
 
     def self.find_or_create_for(application, resource_owner_id, scopes, expires_in, use_refresh_token)
